@@ -23,7 +23,6 @@ function Login(){
 
             <div className="card shadow p-4 mx-auto" style={{ maxWidth: "450px" }} >
             <h3 className="text-primary text-center mb-4"> Login Page</h3>
-
         
             <div className="mb-3">
                 <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
