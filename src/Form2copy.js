@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { validateEmail, validateMobile, validatePassword } from "./util";
-import './styles.css'
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 
-
-function Signup(){
+function Form2(){
 
     //use state variables to update the changes as per your input
 
@@ -40,28 +39,26 @@ function Signup(){
      function handlePasswordChange(event){
         setPassword( event.target.value);
     }
+    function handleCheckboxChange(event){
+        setCheckbox( event.target.checked);
+    } 
 
     function handleCountryCodeChange(event) {
         setCountryCode(event.target.value);
     }
 
-    function handleCheckboxChange(event){
-        setCheckbox( event.target.checked);
-    } 
-
-
-
     function handleSignup(e){
-       
-         e.preventDefault(); // stops page reload
-         // reset errors first
-        setNameError("");
-        setEmailError("");
-        setMobileError("");
-        setPasswordError("");
-        setCheckBoxError("");
-   
-        let isValid = true;
+    
+    e.preventDefault(); // stops page reload
+
+    // reset errors first
+    setNameError("");
+    setEmailError("");
+    setMobileError("");
+    setPasswordError("");
+    setCheckBoxError("");
+
+    let isValid = true;
         
     // Name validation
     if (!name || name.trim().length < 3) {
@@ -103,18 +100,15 @@ function Signup(){
     if (!isValid) return;
 
     console.log(name, email, password, countryCode , mobile, phone);
-    }
+
+}
 
     return(
         <form onSubmit={handleSignup}>
-             <div className="login-page">
-                <div className="floating-circle circle1"></div>
-                <div className="floating-circle circle2"></div>
-                 <div className="floating-circle circle3"></div>
             <div className="container mt-5">
 
-                <div className="card shadow p-4 mx-auto login-card" style={{ maxWidth: "450px" }} >
-                <h3 className="text-primary text-center mb-4"> Sign up</h3>
+                <div className="card shadow p-4 mx-auto" style={{ maxWidth: "450px" }} >
+                <h3 className="text-primary text-center mb-4"> Sign up Validation form2copy</h3>
 
                 <div className="mb-3">
                     <label htmlFor="exampleInputName1" className="form-label">Full Name</label>
@@ -138,10 +132,9 @@ function Signup(){
                         placeholder="name@example.com"
                         onChange={ event => handleEmailChange(event)}
                     />
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                     <div className="text-danger">{emailError}</div>
+                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                 </div>
-
                 <div className="mb-3">
                     <div className="row g-2 ">
 
@@ -217,6 +210,14 @@ function Signup(){
 
                     </div>
                 </div>
+                {/* <div className="mb-3">
+                    <PhoneInput
+                        country={"in"}   // default country (India)
+                        value={phone}
+                        onChange={(value) => setPhone(value)}
+                    />
+
+                </div> */}
 
                 <div className="mb-3 ">
                     <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
@@ -238,24 +239,17 @@ function Signup(){
                         type="checkbox" 
                         className="form-check-input" 
                         id="exampleCheck1"
-                        onChange={event => handleCheckboxChange(event)}
+                        onChange={handleCheckboxChange}
                     />
-                
-                    <label className="form-check-label" htmlFor="exampleCheck1">
-                        I agree to{" "}
-                        <Link to="/terms" target="_blank">
-                            Terms & Conditions
-                        </Link>
-                    </label>
+                    <label className="form-check-label" htmlFor="exampleCheck1">Terms & Conditions</label>
                     <div className="text-danger">{checkBoxError}</div>
-                    </div>
-                <button type="submit" className="btn btn-primary" >Submit</button>
+                </div>
+                {/* <button type="submit" className="btn btn-primary" onClick={handleSignup}>Submit</button> */}
+                <button type="submit" className="btn btn-primary">Submit</button>
                 
             </div>
-    </div>
     </div>
     </form>
     );
 }
-
-export default Signup;
+export default Form2;

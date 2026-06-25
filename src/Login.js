@@ -1,11 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
+import { validateEmail, validatePassword } from "./util";
+import './styles.css'
+
 
 
 function Login(){
 
+    const navigate = useNavigate();
+    
+
     var [email,setEmail] = useState("");
     var [password,setPassword] = useState("");
+     var [checkbox,setCheckbox] = useState("");
+
+    //error handling
+    var [emailError,setEmailError] = useState("");
+    var [passwordError,setPasswordError] = useState("");
+    var [checkboxError,setCheckBoxError] = useState("");
+
 
     function handleEmailChange(event){
         setEmail(event.target.value);
@@ -13,15 +26,67 @@ function Login(){
     function handlePasswordChange(event){
         setPassword( event.target.value);
     }
+    function handleCheckboxChange(event){
+        setCheckbox( event.target.checked);
+    } 
 
-    function handleLogin(){
-        console.log(email,password);
+    function handleLogin(e){
+
+        e.preventDefault();
+
+        setEmailError("");
+        setPasswordError("");
+        setCheckBoxError("");
+
+        var isValid = true;
+
+            if(!validateEmail(email)){
+                setEmailError("Please enter a valid email address");
+                isValid = false;
+            }
+
+            // Password validation
+            if (password.length < 8) {
+                setPasswordError("Password must be at least 8 characters long");
+                //return;
+                isValid = false;
+            }
+        
+            if (!validatePassword(password)) {
+                setPasswordError("Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character");
+               isValid = false;
+            }
+
+           // Checkbox validation
+            if (!checkbox) {
+                setCheckBoxError("You must accept Terms & Conditions");
+                isValid = false;
+            }
+                
+            
+            if (!isValid) return;
+
+            if(!isValid){
+                console.log("Not valid")
+            }
+
+            localStorage.setItem("isLoggedIn", "true");
+
+            navigate("/dashboard");
+
+            console.log(email,password);
     }
 
     return(
-        <div className="container mt-5">
+        <form onSubmit={handleLogin}>
+        <div className="login-page">
+            <div className="floating-circle circle1"></div>
+            <div className="floating-circle circle2"></div>
+            <div className="floating-circle circle3"></div>
 
-            <div className="card shadow p-4 mx-auto" style={{ maxWidth: "450px" }} >
+            <div className="container mt-5">
+
+            <div className="card shadow p-4 mx-auto login-card" style={{ maxWidth: "450px" }} >
             <h3 className="text-primary text-center mb-4"> Login Page</h3>
         
             <div className="mb-3">
@@ -35,6 +100,7 @@ function Login(){
                     onChange={a=>handleEmailChange(a)}
                 />
                 <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+                <div className="text-danger">{emailError}</div>
             </div>
 
             <div className="mb-3 ">
@@ -47,24 +113,36 @@ function Login(){
                     onChange={a=>handlePasswordChange(a)}
                  />
             </div>
+            <div className="text-danger">{passwordError}</div>
 
             <div className="mb-3 form-check">
-                <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
-                <label className="form-check-label" htmlFor="exampleCheck1">Terms & Conditions</label>
+                <input 
+                    type="checkbox" 
+                    className="form-check-input" 
+                    id="exampleCheck1"
+                    onChange={a=>handleCheckboxChange(a)}
+                />
+                {/* <label className="form-check-label" htmlFor="exampleCheck1">Terms & Conditions</label> */}
+                <label className="form-check-label" htmlFor="exampleCheck1">
+                    I agree to{" "}
+                    <Link to="/terms" target="_blank">
+                        Terms & Conditions
+                    </Link>
+                </label>
+                <div className="text-danger">{ checkboxError}</div>
             </div>
 
-            <button type="submit" className="btn btn-primary" onClick={handleLogin}>Submit</button>
+            {/* <button type="submit" className="btn btn-primary" onClick={handleLogin}>Submit</button> */}
+             <button type="submit" className="btn btn-primary">Submit</button>
 
             <Link to="/forgot-password" className="text-center ml-4 mt-4">
               Forgot Password
             </Link>
-
-        {
-            email 
-        }
           
         </div>
     </div>
+    </div>
+    </form>
     );
 
 }
