@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link , useNavigate} from "react-router-dom";
 import { validateEmail, validatePassword } from "./util";
 import './styles.css'
+import axios from "axios";
 
 
 
@@ -12,7 +13,10 @@ function Login(){
 
     var [email,setEmail] = useState("");
     var [password,setPassword] = useState("");
-     var [checkbox,setCheckbox] = useState("");
+    var [checkbox,setCheckbox] = useState("");
+
+    var[apiErrorMessage, setApiErrorMessage] = useState("")
+    var[apiSucccessMessage, setApiSuccessMessage] = useState("")
 
     //error handling
     var [emailError,setEmailError] = useState("");
@@ -30,13 +34,15 @@ function Login(){
         setCheckbox( event.target.checked);
     } 
 
-    function handleLogin(e){
+    async function handleLogin(e){
 
         e.preventDefault();
 
         setEmailError("");
         setPasswordError("");
         setCheckBoxError("");
+        setApiErrorMessage("");
+        setApiSuccessMessage("");
 
         var isValid = true;
 
@@ -70,9 +76,84 @@ function Login(){
                 console.log("Not valid")
             }
 
-            localStorage.setItem("isLoggedIn", "true");
+              var inputRequest = {
+                'email': email,
+                'password': password
+            };
 
-            navigate("/dashboard");
+            // --------------------------------------------------------------------------
+            
+            //by using fetch (javascript)
+            // var fetchApiInput = {
+
+            //     headers:{
+            //         'Content-type': 'application/json'
+            //     },
+            //     method: 'POST',
+            //     body: JSON.stringify(inputRequest)
+
+            // }
+
+            // try{
+                
+            //   var fetchApiResponse = await fetch("http://localhost:8080/dev/api/v1/users/login", fetchApiInput);
+            //  var apiDate = await fetchApiResponse.json();
+            //   console.log(fetchApiResponse);
+            //   console.log(apiDate);
+            // } catch(error){
+            //     setApiErrorMessage(error);
+            // }
+
+            // --------------------------------------------------------------------------
+
+
+            try {
+                const response = await axios.post(
+                    "http://localhost:8080/dev/api/v1/users/login",
+                    inputRequest
+                );
+
+                console.log("Success:", response.data);
+
+                if (response.data.status === 200) {
+                    const jwtToken = response.data.data["Jwt-Token"];
+                        
+                    console.log("JWT Token:", jwtToken);
+
+                    localStorage.setItem("token", jwtToken);
+
+                    setApiSuccessMessage("Login successful!");
+
+                     localStorage.setItem("isLoggedIn", "true");
+
+                     //navigate("/dashboard");
+                     //window.location = "/dashboard"; // if we use thisthe logs will be refreshed
+                     // or
+                     window.location.href = "/dashboard";
+                    
+
+                } else {
+                    setApiErrorMessage(response.data.message);
+                }
+
+            } catch (error) {
+               
+                if (error.response) {
+                    // Server responded with error status
+                    console.log("Backend error:", error.response.data);
+                    setApiErrorMessage(error.response.data.message || "Login failed");
+                    
+                } else if (error.request) {
+                    // No response received (NETWORK ERROR)
+                    console.log("Network error - server not reachable");
+                    setApiErrorMessage("Cannot connect to server. Check your internet connection.");
+
+                } else {
+                    // Other errors
+                    console.log("Error:", error.message);
+                    setApiErrorMessage("Something went wrong");
+                }
+            }
 
             console.log(email,password);
     }
@@ -138,6 +219,21 @@ function Login(){
             <Link to="/forgot-password" className="text-center ml-4 mt-4">
               Forgot Password
             </Link>
+
+            {/* conditional rendering */}
+            <div className="mt-3">
+                {apiErrorMessage &&(
+                    <div className="alert alert-danger">
+                        {apiErrorMessage}
+                    </div>
+                )}
+                {apiSucccessMessage && (
+                        <div className="alert alert-success" role="alert">
+                            {apiSucccessMessage}
+                        </div>
+                    )}
+
+            </div>
           
         </div>
     </div>

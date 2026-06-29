@@ -17,6 +17,12 @@ import Form2 from './Form2';
 import Terms from './Terms';
 import Dashboard from './Dashboard';
 import UpdatePassword from './UpdatePassword';
+import List from './Shared/List';
+import PrivacyPolicy from './PrivacyPolicy';
+import TalkToUs from './Home/TalkToUs';
+import Sidebar from './Shared/Sidebar';
+import DashboardLayout from './Shared/DashboardLayout';
+import About from './Shared/About';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -30,6 +36,12 @@ root.render(
         <Route path='form2' Component={Form2} />
         <Route path='form2-copy' Component={Form2copy} />
         <Route path='terms' Component={Terms} />
+        <Route path='privacy' Component={PrivacyPolicy} />
+        <Route path='contact-us' Component={TalkToUs} />
+        <Route path='list' Component={List}/>
+        <Route path='sidebar' Component={Sidebar} />
+        <Route path="/dashboard1" element={<DashboardLayout />}></Route>
+        <Route path="/about" element={<About />} />
         <Route path='dashboard' 
           element={
           <ProtectedRoute>

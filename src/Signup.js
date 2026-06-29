@@ -1,11 +1,15 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { use, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { validateEmail, validateMobile, validatePassword } from "./util";
 import './styles.css'
+import axios from "axios";
 
 
 
 function Signup(){
+
+    const navigate = useNavigate();
+
 
     //use state variables to update the changes as per your input
 
@@ -16,6 +20,8 @@ function Signup(){
     var [checkbox,setCheckbox] = useState("");
     var [countryCode, setCountryCode] = useState("");
     var [phone, setPhone] = useState("");
+    const [loading, setLoading] = useState(false);
+
 
 
     // error variables
@@ -25,6 +31,9 @@ function Signup(){
     var [mobileError, setMobileError] = useState("");
     var [passwordError, setPasswordError] = useState("");
     var [checkBoxError, setCheckBoxError] = useState("");
+
+    var [apiSuccessMessage, setApiSuccessMessage] = useState("");
+    var [apiErrorMessage, setApiErrorMessage] = useState("");
 
 
     function handleNameChange(event){
@@ -49,19 +58,29 @@ function Signup(){
         setCheckbox( event.target.checked);
     } 
 
+ function resetErrors() {
+    setNameError("");
+    setEmailError("");
+    setMobileError("");
+    setPasswordError("");
+    setCheckBoxError("");
+    setApiErrorMessage("");
+    setApiSuccessMessage("");
+  }
 
 
-    function handleSignup(e){
+    async function handleSignup(e){
        
          e.preventDefault(); // stops page reload
          // reset errors first
-        setNameError("");
-        setEmailError("");
-        setMobileError("");
-        setPasswordError("");
-        setCheckBoxError("");
+        // setNameError("");
+        // setEmailError("");
+        // setMobileError("");
+        // setPasswordError("");
+        // setCheckBoxError("");
+        resetErrors();
    
-        let isValid = true;
+    let isValid = true;
         
     // Name validation
     if (!name || name.trim().length < 3) {
@@ -102,7 +121,95 @@ function Signup(){
 
     if (!isValid) return;
 
-    console.log(name, email, password, countryCode , mobile, phone);
+    var apiInputData = 
+        {
+            'name': name,
+            'phoneNo': mobile,
+            'email': email,
+            'password': password,
+            "role": "USER"
+
+        }
+        //axios.post('http://localhost:8080/dev/api/v1/users/create',apiInputData);
+
+    //    var apiRespone = await axios
+    //         .post("http://localhost:8080/dev/api/v1/users/create", apiInputData)
+    //         .then((response) => {
+    //             console.log(response.data);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+
+    //     console.log("API Input Data");
+    //     console.log(apiInputData);
+    //     console.log(apiRespone);
+
+        try {
+            setLoading(true);
+
+            const response = await axios.post(
+                "http://localhost:8080/dev/api/v1/users/create",
+                apiInputData
+            );
+
+            console.log("Success:", response.data);
+
+            if(response.data.status === 200){
+                const jwtToken = response.headers["Jwt-Token"];
+
+                console.log("JWT Token:", jwtToken);
+
+                //alert("User registered successfully!");
+                setApiSuccessMessage("User registered successfully!");
+            }else{
+                setApiErrorMessage(response.data.message);
+            }
+
+            // reset form
+            setName("");
+            setEmail("");
+            setMobile("");
+            setPassword("");
+            setCheckbox(false);
+            setCountryCode("+91");
+
+            localStorage.setItem("isLoggedIn", "true");
+            navigate("/dashboard");
+
+            } catch (error) {
+            console.error("Error:", error);
+
+            // if (error.response) {
+            //     alert(`Error: ${error.response.status}`);
+            // } else if (error.request) {
+            //     alert("Server not responding");
+            // } else {
+            //     alert(error.message);
+            // }
+             if (error.response) {
+               //setApiErrorMessage(error.response);
+               setApiErrorMessage(
+                error.response?.data?.message ||
+                error.response?.data ||
+                "Something went wrong"
+                );
+            } else if (error.request) {
+                setApiErrorMessage("Server not responding");
+            } else {
+                //setApiErrorMessage(error.message);
+                setApiErrorMessage(
+                error.message ||
+                "Something went wrong. aa"
+                );
+            }
+
+            } finally {
+            setLoading(false);
+            
+            }
+
+            console.log(name, email, password, countryCode , mobile, phone);
     }
 
     return(
@@ -249,8 +356,33 @@ function Signup(){
                     </label>
                     <div className="text-danger">{checkBoxError}</div>
                     </div>
-                <button type="submit" className="btn btn-primary" >Submit</button>
-                
+                {/* <button type="submit" className="btn btn-primary" >Submit</button> */}
+                <div>
+                    <button className="btn btn-primary w-100" disabled={loading}>
+                        {loading ? "Registering..." : "Submit"}
+                    </button>
+                </div>
+                 <div className="mt-3">
+                    {/* <div class="alert alert-danger" role="alert">
+                        {apiErrorMessage}
+                    </div>
+                    <div class="alert alert-success" role="alert">
+                        {apiSuccessMessage}
+                    </div> */}
+                    {apiErrorMessage && (
+                        <div className="alert alert-danger" role="alert">
+                            {apiErrorMessage}
+                        </div>
+                    )}
+
+                    {apiSuccessMessage && (
+                        <div className="alert alert-success" role="alert">
+                            {apiSuccessMessage}
+                        </div>
+                    )}
+
+                 </div>
+                        
             </div>
     </div>
     </div>

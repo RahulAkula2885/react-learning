@@ -1,9 +1,18 @@
 import { Link } from "react-router-dom";
+import Header from "./Shared/Header";
+import Footer from "./Shared/Footer";
+import TalkToUs from "./Home/TalkToUs";
 
 function Home() {
+
+  var homepageMessage = "From Homepage";
   return (
     <div className="home-page">
       <div className="container">
+
+        <div>
+          <Header/>
+        </div>
 
         <div className="row min-vh-100 align-items-center">
 
@@ -36,14 +45,23 @@ function Home() {
             </div>
           </div>
 
-          <div className="col-lg-6 text-center">
+          <div className="col-lg-6 ">
+            <div className="text-center">
             <img
               src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
               alt="React Logo"
               className="react-logo"
             />
+            </div>
+
+            {/* <TalkToUs/> */}
+            <TalkToUs message={homepageMessage}/>
           </div>
 
+        </div>
+
+        <div>
+          <Footer/>
         </div>
 
       </div>
