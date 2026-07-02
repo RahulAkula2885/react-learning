@@ -50,7 +50,7 @@ function Header() {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/list">
+              <Link className="nav-link" to="/products">
                 Courses
               </Link>
             </li>
@@ -70,6 +70,12 @@ function Header() {
             <li className="nav-item">
               <Link className="nav-link" to="/privacy-policy">
                 Privacy Policy
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to="/profile">
+                Profile
               </Link>
             </li>
 
