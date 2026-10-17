@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Layout from "./Components/Layout";
 
 function UserDetails() {
   const { id } = useParams();
@@ -75,7 +76,7 @@ function UserDetails() {
 
       setTimeout(() => {
         setSuccessMessage("");
-        navigate("/testing");
+        //navigate("/testing");
       }, 1500);
 
     } catch (error) {
@@ -95,6 +96,8 @@ function UserDetails() {
   if (!user) return <p>Loading...</p>;
 
   return (
+    <div className="dashboard-page d-flex">
+            <Layout/>
     <div className="container mt-4">
       <h2>User Details</h2>
 
@@ -197,12 +200,23 @@ function UserDetails() {
         {/* BUTTONS */}
         <div className="mb-3 d-flex justify-content-end gap-2">
           {!isEdit ? (
+            <>
             <button
               className="btn btn-primary"
               onClick={() => setIsEdit(true)}
             >
               Edit
             </button>
+            <button
+              className="btn btn-secondary"
+              //onClick={() => navigate(-1)}
+              onClick={() => navigate("/users")}
+            >
+              Back
+            </button>
+
+            </>
+            
           ) : (
             <>
               <button
@@ -223,6 +237,7 @@ function UserDetails() {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }

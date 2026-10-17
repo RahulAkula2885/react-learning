@@ -99,6 +99,9 @@ import Footer from "../Shared/Footer";
 import Header from "../Shared/Header";
 import axios from "axios";
 import Layout from "../Components/Layout";
+import HeaderNav from "../Shared/HeaderNav";
+import ProductSingle from "./ProductSingle";
+import toast from "react-hot-toast"; //function
 
 function ProductList() {
 
@@ -109,6 +112,21 @@ function ProductList() {
 
     let [products, setProducts] = useState([]);
     const [expandedId, setExpandedId] = useState(null);
+    let [noOfCartItems,setNoOfCartItems] = useState(0);
+
+
+    function updateCart(){
+      setNoOfCartItems(noOfCartItems + 1);   
+      toast.success("Added Item")
+    }
+    function removeCart(){
+        if(noOfCartItems <= 0){
+            toast.error("No Items found");
+        }else{
+         setNoOfCartItems(noOfCartItems - 1); 
+         toast.success("Removed Item")
+        }
+    }
 
     useEffect(() => {
         console.log("ProductList loaded");
@@ -170,16 +188,22 @@ function ProductList() {
                 }}
             >
         <div className="container">
+             <HeaderNav/>
             <div className="row">
 
                 {/* <div className="col-12 mt-4" style={{ backgroundColor: "#203E7B" }}>
                     <Header />
                 </div> */}
             </div>
+            <div>
+                bhjasbjhabkhj {noOfCartItems}
+            </div>
 
                 <div className="row mt-3 mb-53">
                         {
                             products.map((product) => (
+                                
+                            
                                 <div className="col-3 pb-2" key={product.id}>
                                     <div className="card shadow h-100">
                                         <img src= {product.thumbnail} className="card-img-top" style={{ height: "200px", objectFit: "cover" }} />
@@ -237,8 +261,12 @@ function ProductList() {
                 <div className="row mt-5mb-5">
                   {
                     products.map((product, index) => (
+                        
                         <div key={product.id}>
                            {index + 1}.  {product.title}
+                           // mapping to product Single page
+                            <ProductSingle productName = {product}  updateCartName ={updateCart} removeCartName ={removeCart}/>
+                           
                         </div>
                     ))
                 }

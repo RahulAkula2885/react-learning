@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Header() {
 
     var [navClassesList, setNavClassesList] = useState("collapse navbar-collapse");
     var isNavShowing = false;
+
+    const counter = useSelector((state) => state.counter.value);
     
 
     function handleNavigationToggle(){
@@ -25,6 +28,7 @@ function Header() {
         <Link className="navbar-brand fw-bold" to="/">
           React.js Learning Portal
         </Link>
+         <p>Current Redux Count: {counter}</p>
 
         {/* Mobile Toggle */}
         <button
@@ -76,6 +80,12 @@ function Header() {
             <li className="nav-item">
               <Link className="nav-link" to="/profile">
                 Profile
+              </Link>
+            </li>
+
+             <li className="nav-item">
+              <Link className="nav-link" to="/productListRedux">
+                Product List
               </Link>
             </li>
 

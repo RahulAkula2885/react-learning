@@ -29,17 +29,27 @@ import UserDetails from './UserDetails';
 import Users from './Users';
 import Product from './ReadData/Product';
 import Layout from './Components/Layout';
+import HeaderNav from './Shared/HeaderNav';
+import ProductSingle from './Product/ProductSingle';
+import DataTestRedux from './reduxx/DataTestRedux';
+import { Toaster } from 'react-hot-toast'; //component
+import { Provider } from 'react-redux';
+import store from './store/store';
+import ProductSingleRedux from './reduxx/ProductSingleRedux';
+import ProductListRedux from './reduxx/ProductListRedux';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <React.StrictMode>
+  //<React.StrictMode>
+  <Provider store={store}>  
+     <Toaster position='top-right' />
     <BrowserRouter>
       <Routes>
 
         {/* PUBLIC ROUTES */}
-        <Route path='/' element={<Layout />}></Route>
-        {/* <Route path='/' element={<Home />} /> */}
+        <Route path='/layout' element={<Layout />}></Route>
+         <Route path='/' element={<Home />} /> 
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<Signup />} />
         <Route path='forgot-password' element={<ForgotPassword />} />
@@ -54,8 +64,14 @@ root.render(
         <Route path="/products-list" element={<ProductList />} />
         <Route path="/users" element={<Users />} />
         <Route path="/user/:id" element={<UserDetails />} />
+         <Route path='/reduxx' element={<DataTestRedux />} /> 
         
         <Route path="/products" element={<Product />} />
+        <Route path="/head" element={<HeaderNav />} />
+         <Route path="/product-single" element={<ProductSingle />} />
+         <Route path ="/productSingleRedux" element={<ProductSingleRedux />} />
+         <Route path ="/productListRedux" element={<ProductListRedux />} />
+        
 
         {/* DASHBOARD LAYOUT */}
         <Route path="/dashboard1" element={<DashboardLayout />} />
@@ -90,7 +106,8 @@ root.render(
 
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+    </Provider>
+  //</Provider></React.StrictMode>
 );
 
 reportWebVitals();

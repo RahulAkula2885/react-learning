@@ -119,18 +119,21 @@ function Login(){
                 if (response.data.status === 200) {
                     const jwtToken = response.data.data["Jwt-Token"];
                         
-                    console.log("JWT Token:", jwtToken);
+                    //console.log("JWT Token:", jwtToken);
 
                     localStorage.setItem("token", jwtToken);
 
                     setApiSuccessMessage("Login successful!");
 
-                     localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("name", response.data.data.response.name);
 
-                     //navigate("/dashboard");
+                    console.log(response.data.data.response.name);
+
+                     navigate("/dashboard");
                      //window.location = "/dashboard"; // if we use thisthe logs will be refreshed
                      // or
-                     window.location.href = "/dashboard";
+                     //window.location.href = "/dashboard";
                     
 
                 } else {

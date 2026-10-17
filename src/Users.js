@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "./Components/Layout";
 import "./styles.css";
+import HeaderNav from "./Shared/HeaderNav";
 
 function Users() {
     const navigate = useNavigate();
@@ -113,8 +114,9 @@ function Users() {
     return (
         <div className="dashboard-page d-flex">
             <Layout />
-
+            
             <div className="flex-grow-1 p-3">
+                <HeaderNav/>
                 <div
                     className="card shadow-sm"
                     style={{
@@ -149,15 +151,15 @@ function Users() {
                                     {Object.keys(search).map((key) => (
                                         <th key={key}>
                                             <input
-                                                name={key}
-                                                value={search[key]}
-                                                onChange={handleSearchChange}
-                                                className="form-control form-control-sm"
-                                                placeholder={
-                                                    key === "active" || key === "deleted"
-                                                        ? "Yes/No"
-                                                        : key
-                                                }
+                                            name={key}
+                                            value={search[key]}
+                                            onChange={handleSearchChange}
+                                            className="form-control form-control-sm"
+                                            placeholder={
+                                                key === "active" || key === "deleted"
+                                                    ? "Yes/No"
+                                                    : key
+                                            }
                                         />
                                         </th>
                                     ))}
